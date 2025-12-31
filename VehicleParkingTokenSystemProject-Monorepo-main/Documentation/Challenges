@@ -1,0 +1,162 @@
+Here's a professionally rewritten version of your detailed project troubleshooting summary, tailored for inclusion in a GitHub README or project documentation under a section like `## Troubleshooting & Challenges Resolved`:
+
+https://chatgpt.com/share/6839cdb7-fba4-8001-8aa4-c17f2b3b1c30
+---
+
+## Troubleshooting & Challenges Resolved
+DEPLOY -- https://chatgpt.com/share/68563698-ecc4-8001-97c4-8748ad7ebbaa
+This section documents the various technical challenges encountered during the development of this project and how each was resolved. It serves as a reference for future maintenance and helps others understand the debugging process.
+
+---
+
+### 1. **Database Connection Issue During Gradle Build**
+
+* **Problem:** The Gradle build failed with `CannotGetJdbcConnectionException` and `java.sql.SQLSyntaxErrorException` during the `SpringOneApplicationTests > contextLoads()` test.
+* **Root Cause:** Misconfigured database connection.
+* **Resolution:**
+
+  * Verified and corrected `application.properties` configuration.
+  * Ensured the database server was running.
+  * Checked schema validity.
+  * Considered using an embedded database for tests if applicable.
+  * Ensured all dependencies were correct.
+* **Outcome:** The build and tests executed successfully after the fix.
+
+---
+
+### 2. **JPA Entity Symbols Not Resolved**
+
+* **Problem:** IntelliJ reported `Cannot resolve symbol 'persistence'` and `'Entity'`.
+* **Root Cause:** Missing JPA dependencies.
+* **Resolution:**
+
+  * Added the required dependencies in Gradle:
+
+    ```gradle
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.hibernate:hibernate-core'
+    implementation 'jakarta.persistence:jakarta.persistence-api'
+    ```
+  * Rebuilt the project to resolve symbols.
+* **Outcome:** JPA annotations like `@Entity` were recognized correctly.
+
+---
+
+### 3. **MySQL Connector and Server Port Configuration**
+
+* **Challenge A:** MySQL connector version incompatible with Spring Boot 3.4.1.
+
+  * **Fix:** Upgraded connector to a compatible version: `8.0.26`.
+
+* **Challenge B:** Port binding error due to malformed `server.port` line in `application.properties`.
+
+  * **Fix:** Moved inline comment to a separate line:
+
+    ```properties
+    server.port=8080
+    # Set the server port (default: 8080)
+    ```
+
+* **Challenge C:** PowerShell didn't recognize `gradlew`.
+
+  * **Fix:** Used `.\gradlew` instead of `gradlew`.
+
+* **Challenge D:** Application startup failure with a non-zero exit status.
+
+  * **Fix:** Used `--stacktrace` to analyze logs and debug further.
+
+---
+
+### 4. **Frontend-Backend Integration (Vehicle Exit Form)**
+
+* **Challenges:**
+
+  1. Integrating GET request for vehicle exit via token.
+  2. Handling missing/invalid tokens.
+  3. Calculating fee based on entry duration.
+  4. Error handling in API communication.
+
+* **Solutions:**
+
+  * Used Axios in the frontend to call the backend with token.
+  * Returned appropriate status codes (`404`) for invalid tokens.
+  * Used JavaScript `Date` object to compute parking fee.
+  * Implemented meaningful error messages for better UX.
+
+---
+
+### 5. **Frontend Startup Failure (Vite & PostCSS Issue)**
+
+* **Problem:** File lock error on `base64-vlq.js` in `node_modules/source-map-js`.
+* **Resolution:**
+
+  1. Closed all interfering applications (e.g., editors, antivirus).
+  2. Restarted system.
+  3. Deleted `node_modules` and `package-lock.json`, then reinstalled via `npm install`.
+  4. Verified PostCSS configuration.
+  5. Ran terminal as administrator.
+* **Outcome:** Resolved the file lock issue and launched the frontend successfully.
+
+---
+
+### 6. **Spring Boot Port & Internal Server Error**
+
+* **Problem A:** ECONNREFUSED on port `8082` when testing with Postman.
+
+  * **Fix:** Switched to `8083` using:
+
+    ```properties
+    server.port=8083
+    ```
+
+* **Problem B:** 500 Internal Server Error on POST requests.
+
+  * **Fix:**
+
+    * Checked Spring Boot logs and stack trace.
+    * Verified controller, service, and entity configurations.
+    * Ensured database mappings and constraints were correctly implemented.
+
+---
+
+### 7. **API Communication and Token Handling Errors**
+
+* **Issues:**
+
+  * 500 errors on API calls due to incorrect field mappings.
+  * Misalignment in frontend-backend field names (`name` vs `ownerName`).
+  * Incomplete token handling on frontend.
+
+* **Fixes:**
+
+  * Verified endpoints using Postman.
+  * Corrected field mappings in request body.
+  * Ensured token was handled and displayed properly on frontend.
+  * Added detailed error logging on the backend and user-friendly frontend messages.
+
+---
+
+### 8. **Unmapped Endpoint (404 on /parking)**
+
+* **Problem:** POST to `/parking` returned 404 Not Found.
+* **Root Cause:** Endpoint was not defined in the backend.
+* **Resolution:**
+
+  * Created a controller with:
+
+    ```java
+    @PostMapping("/parking")
+    public ResponseEntity<?> createEntry(@RequestBody ParkingRequest request) { ... }
+    ```
+  * Optional: Mapped `/` to return a welcome message.
+* **Outcome:** Backend responded successfully to the POST request after mapping the endpoint.
+
+---
+
+## Summary
+
+These troubleshooting steps improved project stability and ensured proper frontend-backend communication. The backend now correctly handles requests, and the frontend provides meaningful feedback to users, resulting in a seamless user experience.
+
+---
+
+Let me know if you want this formatted as a Markdown `.md` file or added to a specific section of your GitHub project.
